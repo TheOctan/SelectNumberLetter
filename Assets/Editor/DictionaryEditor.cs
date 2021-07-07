@@ -4,14 +4,14 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-[CustomEditor(typeof(Dictionary))]
+[CustomEditor(typeof(ItemSet))]
 public class DictionaryEditor : Editor
 {
-	private Dictionary dictionary;
+	private ItemSet dictionary;
 
 	private void OnEnable()
 	{
-		dictionary = target as Dictionary;
+		dictionary = target as ItemSet;
 	}
 
 	public override void OnInspectorGUI()
