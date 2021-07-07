@@ -52,11 +52,6 @@ namespace OctanGames.Managers
 			}
 		}
 
-		public void OnSelectAnswer(string answer)
-		{
-
-		}
-
 		private void StartGame()
 		{
 			UpdateTask();

@@ -27,11 +27,10 @@ namespace OctanGames
 		[SerializeField] private float _failShakeStrength = 10;
 
 		[Header("Events")]
-		[SerializeField] private SelectionEvent _answerSelected;
+		[SerializeField] private UnityEvent _answerSelected;
 
 		private IItemProvider _itemProvider;
 		private GridLayoutGroup _grid;
-		private List<string> _items = new List<string>();
 		private RandomIndexGenerator _indexGenerator = new RandomIndexGenerator();
 		private System.Random _random = new System.Random(System.DateTime.Now.Second);
 
@@ -56,12 +55,6 @@ namespace OctanGames
 		public void OnLevelStarted(int level)
 		{
 			GenerateGrid(level);
-		}
-
-		private void OnSelectAnswer(int index)
-		{
-			string answer = _items[index];
-			_answerSelected.Invoke(answer);
 		}
 
 		private void UpdateGrid()
@@ -105,7 +98,6 @@ namespace OctanGames
 
 		private void ResetPanel()
 		{
-			_items.Clear();
 			for (int i = 0; i < transform.childCount; i++)
 			{
 				var item = transform.GetChild(i).gameObject;
@@ -119,7 +111,6 @@ namespace OctanGames
 			ItemView itemView = Instantiate(_itemPrefab, transform);
 			itemView.BackgroundColor = Random.ColorHSV(0, 1, 0.22f, 0.55f, 1, 1);
 			itemView.iconImage = item.Image;
-			_items.Add(item.Name);
 
 			if (item.RotateImage)
 			{
@@ -131,15 +122,16 @@ namespace OctanGames
 
 		private void SubscribeEvent(ItemView itemView, UnityAction<int> action, int index)
 		{
-			Button button = itemView.GetComponent<Button>();
-			button.onClick.AddListener(() => action(index));
-			button.onClick.AddListener(() => OnSelectAnswer(index));
+			itemView.GetComponent<Button>().onClick.AddListener(() => action(index));
 		}
 
 		private void OnCorrectAnswer(int index)
 		{
 			Transform item = transform.GetChild(index);
-			item.DOShakeScale(_correctShakeDuration, _correctShakeStrength, 10, 0).SetEase(_correctShakeType);
+			DOTween.Sequence()
+				.Append(item.DOShakeScale(_correctShakeDuration, _correctShakeStrength, 10, 0).SetEase(_correctShakeType))
+				.AppendInterval(0.5f)
+				.OnComplete(_answerSelected.Invoke);
 
 			_winEffect.transform.position = item.transform.position;
 			_winEffect.Play();
@@ -149,10 +141,5 @@ namespace OctanGames
 		{
 			transform.GetChild(index).DOShakeRotation(_failShakeDuration, Vector3.forward * _failShakeStrength).SetEase(_failShakeType);
 		}
-	}
-
-	[System.Serializable]
-	public class SelectionEvent : UnityEvent<string>
-	{
 	}
 }
