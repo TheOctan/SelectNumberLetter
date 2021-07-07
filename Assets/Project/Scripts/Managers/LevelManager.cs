@@ -9,12 +9,10 @@ namespace OctanGames
 {
 	public class LevelManager : MonoBehaviour
 	{
+		[Header("Settings")]
 		[Range(1, 3)]
 		[SerializeField] int _countLevels = 3;
 		[SerializeField] private float _startDelay = 0.1f;
-
-		[Header("Components")]
-		[SerializeField] private TaskGenerator _taskGenerator;
 
 		[Header("Panel settings")]
 		[SerializeField] private Panel _panel;
@@ -30,12 +28,14 @@ namespace OctanGames
 		[SerializeField] private LevelEvent _levelStarted;
 		[SerializeField] private UnityEvent _gameFinished;
 
+		private ITaskGenerator _taskGenerator;
+
 		private Color _taskLabelColor;
 		private int _currentLevel = 1;
 
-
 		private void Awake()
 		{
+			_taskGenerator = GetComponent<ITaskGenerator>();
 			InitMenu();
 		}
 

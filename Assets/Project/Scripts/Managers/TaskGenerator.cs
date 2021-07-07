@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace OctanGames
 {
-	public class TaskGenerator : MonoBehaviour
+	public class TaskGenerator : MonoBehaviour, ITaskGenerator
 	{
 		[Header("Task info")]
 		[SerializeField] private string _taskTemplate;
