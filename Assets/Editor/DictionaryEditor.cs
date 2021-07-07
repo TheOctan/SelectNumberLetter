@@ -22,18 +22,16 @@ public class DictionaryEditor : Editor
 			{
 				EditorGUILayout.BeginVertical("Box");
 
-				EditorGUILayout.BeginHorizontal();
-
 				if (GUILayout.Button("X", GUILayout.Width(20), GUILayout.Height(20)))
 				{
 					dictionary.Items.Remove(item);
 					break;
 				}
 
-				EditorGUILayout.EndHorizontal();
-
 				item.Name = EditorGUILayout.TextField("Name", item.Name);
+				item.Rotate = EditorGUILayout.Toggle("Rotate", item.Rotate);
 				item.Image = EditorGUILayout.ObjectField("Image", item.Image, typeof(Sprite), false) as Sprite;
+				
 				EditorGUILayout.EndVertical();
 			}
 		}
