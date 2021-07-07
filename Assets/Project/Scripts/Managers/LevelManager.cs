@@ -16,12 +16,12 @@ namespace OctanGames.Managers
 
 		[Header("Panel settings")]
 		[SerializeField] private Panel _panel;
-		[SerializeField] private float _inDuration = 1f;
+		[SerializeField, Min(0.01f)] private float _inDuration = 1f;
 		[SerializeField] private Ease _panelEaseType = Ease.Linear;
 
 		[Header("Task settings")]
 		[SerializeField] private TextMeshProUGUI _taskLabel;
-		[SerializeField] private float _fadeDuration = 1f;
+		[SerializeField, Min(0.01f)] private float _fadeDuration = 1f;
 		[SerializeField] private Ease _taskEaseType = Ease.Linear;
 
 		[Header("Events")]
@@ -50,6 +50,11 @@ namespace OctanGames.Managers
 			{
 				NextLevel();
 			}
+		}
+
+		public void OnSelectAnswer(string answer)
+		{
+
 		}
 
 		private void StartGame()

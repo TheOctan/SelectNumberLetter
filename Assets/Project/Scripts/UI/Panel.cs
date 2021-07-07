@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using DG.Tweening;
 
 namespace OctanGames
 {
@@ -13,6 +14,17 @@ namespace OctanGames
 		[SerializeField, Min(1)] private int _columnsPerLevel = 3;
 		[SerializeField] private ItemView _itemPrefab;
 		[SerializeField] private MonoBehaviour _provider;
+		[SerializeField] private ParticleSystem _winEffect;
+
+		[Header("Correct answer")]
+		[SerializeField] private Ease _correctShakeType = Ease.Linear;
+		[SerializeField, Min(0.01f)] private float _correctShakeDuration = 0.3f;
+		[SerializeField] private float _correctShakeStrength = 0.15f;
+
+		[Header("Fail answer")]
+		[SerializeField] private Ease _failShakeType = Ease.Linear;
+		[SerializeField, Min(0.01f)] private float _failShakeDuration = 0.5f;
+		[SerializeField] private float _failShakeStrength = 10;
 
 		[Header("Events")]
 		[SerializeField] private SelectionEvent _answerSelected;
@@ -65,7 +77,6 @@ namespace OctanGames
 			List<Item> items = _itemProvider.ActiveSet.Items;
 			_indexGenerator.Randomize(items.Count);
 
-
 			int countItems = countRows * _columnsPerLevel;
 			int activePosition = _random.Next(0, countItems);
 
@@ -73,7 +84,8 @@ namespace OctanGames
 			{
 				if (i == activePosition)
 				{
-					InitItemView(_itemProvider.CurrentItem, i);
+					ItemView itemView = InitItemView(_itemProvider.CurrentItem);
+					SubscribeEvent(itemView, OnCorrectAnswer, i);
 				}
 				else
 				{
@@ -85,7 +97,8 @@ namespace OctanGames
 
 					} while (item.Name.Equals(_itemProvider.CurrentItem.Name));
 
-					InitItemView(item, i);
+					ItemView itemView = InitItemView(item);
+					SubscribeEvent(itemView, OnFailAnswer, i);
 				}
 			}
 		}
@@ -101,13 +114,11 @@ namespace OctanGames
 			}
 		}
 
-		private ItemView InitItemView(Item item, int index)
+		private ItemView InitItemView(Item item)
 		{
 			ItemView itemView = Instantiate(_itemPrefab, transform);
 			itemView.BackgroundColor = Random.ColorHSV(0, 1, 0.22f, 0.55f, 1, 1);
 			itemView.iconImage = item.Image;
-			itemView.GetComponent<Button>().onClick.AddListener(() => OnSelectAnswer(index));
-
 			_items.Add(item.Name);
 
 			if (item.RotateImage)
@@ -116,6 +127,27 @@ namespace OctanGames
 			}
 
 			return itemView;
+		}
+
+		private void SubscribeEvent(ItemView itemView, UnityAction<int> action, int index)
+		{
+			Button button = itemView.GetComponent<Button>();
+			button.onClick.AddListener(() => action(index));
+			button.onClick.AddListener(() => OnSelectAnswer(index));
+		}
+
+		private void OnCorrectAnswer(int index)
+		{
+			Transform item = transform.GetChild(index);
+			item.DOShakeScale(_correctShakeDuration, _correctShakeStrength, 10, 0).SetEase(_correctShakeType);
+
+			_winEffect.transform.position = item.transform.position;
+			_winEffect.Play();
+		}
+
+		private void OnFailAnswer(int index)
+		{
+			transform.GetChild(index).DOShakeRotation(_failShakeDuration, Vector3.forward * _failShakeStrength).SetEase(_failShakeType);
 		}
 	}
 
