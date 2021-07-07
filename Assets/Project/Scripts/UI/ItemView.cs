@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ItemView : MonoBehaviour
+namespace OctanGames
 {
-	public Color BackgroundColor
+	public class ItemView : MonoBehaviour
 	{
-		get => _background.color;
-		set => _background.color = value;
-	}
-	public Sprite iconImage
-	{
-		get => _icon.sprite;
-		set => _icon.sprite = value;
-	}
-	
-	[SerializeField] private Image _background;
-	[SerializeField] private Image _icon;
-}
+		public Color BackgroundColor
+		{
+			get => _background.color;
+			set => _background.color = value;
+		}
+		public Sprite iconImage
+		{
+			get => _icon.sprite;
+			set => _icon.sprite = value;
+		}
 
+		[SerializeField] private Image _background;
+		[SerializeField] private Image _icon;
+	}
+}

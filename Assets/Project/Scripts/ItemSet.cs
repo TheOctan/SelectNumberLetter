@@ -3,36 +3,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Dictionary", menuName = "Scriptable Objects/Dictionary", order = 0)]
-public class ItemSet : ScriptableObject
+namespace OctanGames
 {
-	public List<Item> Items = new List<Item>();
-
-	private Queue<int> _randomIndices;
-
-	public Item GetNextRandomItem()
+	[CreateAssetMenu(fileName = "New Dictionary", menuName = "Scriptable Objects/Dictionary", order = 0)]
+	public class ItemSet : ScriptableObject
 	{
-		int randoIndex = _randomIndices.Dequeue();
-		_randomIndices.Enqueue(randoIndex);
-		return Items[randoIndex];
-	}
+		public List<Item> Items = new List<Item>();
 
-	public void RandomizeSet()
-	{
-		List<int> indices = new List<int>(Items.Count);
-		for (int i = 0; i < Items.Count; i++)
+		private Queue<int> _randomIndices;
+
+		public Item GetNextRandomItem()
 		{
-			indices[i] = i;
+			int randoIndex = _randomIndices.Dequeue();
+			_randomIndices.Enqueue(randoIndex);
+			return Items[randoIndex];
 		}
 
-		_randomIndices = new Queue<int>(indices.Shuffle());
-	}
-}
+		public void RandomizeSet()
+		{
+			List<int> indices = new List<int>(Items.Count);
+			for (int i = 0; i < Items.Count; i++)
+			{
+				indices[i] = i;
+			}
 
-[System.Serializable]
-public class Item
-{
-	public string Name;
-	public Sprite Image;
-	public bool Rotate;
+			_randomIndices = new Queue<int>(indices.Shuffle());
+		}
+	}
+
+	[System.Serializable]
+	public class Item
+	{
+		public string Name;
+		public Sprite Image;
+		public bool Rotate;
+	}
 }
