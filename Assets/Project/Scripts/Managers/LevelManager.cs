@@ -48,7 +48,7 @@ namespace OctanGames
 		{
 			if (Input.GetKeyDown(KeyCode.Space))
 			{
-				UpdateTask();
+				NextLevel();
 			}
 		}
 
@@ -57,6 +57,20 @@ namespace OctanGames
 			_levelStarted.Invoke(_currentLevel);
 			UpdateTask();
 			AnimateMenu();
+		}
+
+		public void NextLevel()
+		{
+			_currentLevel++;
+			if (_currentLevel > _countLevels)
+			{
+				_currentLevel = 1;
+
+				_gameFinished.Invoke();
+			}
+
+			_levelStarted.Invoke(_currentLevel);
+			UpdateTask();
 		}
 		
 		private void UpdateTask()
