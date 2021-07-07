@@ -9,72 +9,98 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c6514501e31a464088f9023317959fe, type: 3}
+  m_Script: {fileID: 11500000, guid: 5afaaab280eb08640a4970d605e575dc, type: 3}
   m_Name: Letters
   m_EditorClassIdentifier: 
   Items:
   - Name: A
     Image: {fileID: 4963718625464178563, guid: 523635428037d3e4bbd0e61aaa180ede, type: 3}
+    RotateImage: 0
   - Name: B
     Image: {fileID: 7783457984840754399, guid: 523635428037d3e4bbd0e61aaa180ede, type: 3}
+    RotateImage: 0
   - Name: C
     Image: {fileID: 3234300448368640894, guid: 523635428037d3e4bbd0e61aaa180ede, type: 3}
+    RotateImage: 0
   - Name: D
     Image: {fileID: 7911670913450602933, guid: 523635428037d3e4bbd0e61aaa180ede, type: 3}
+    RotateImage: 0
   - Name: E
     Image: {fileID: 4652326554734856401, guid: 523635428037d3e4bbd0e61aaa180ede, type: 3}
+    RotateImage: 0
   - Name: F
     Image: {fileID: -6426668015567183463, guid: 523635428037d3e4bbd0e61aaa180ede,
       type: 3}
+    RotateImage: 0
   - Name: G
     Image: {fileID: 216406037199867053, guid: 523635428037d3e4bbd0e61aaa180ede, type: 3}
+    RotateImage: 0
   - Name: H
     Image: {fileID: -8235857483100294123, guid: 523635428037d3e4bbd0e61aaa180ede,
       type: 3}
+    RotateImage: 0
   - Name: I
     Image: {fileID: -3541686595128163680, guid: 523635428037d3e4bbd0e61aaa180ede,
       type: 3}
+    RotateImage: 0
   - Name: J
     Image: {fileID: -2756605603065543306, guid: 523635428037d3e4bbd0e61aaa180ede,
       type: 3}
+    RotateImage: 0
   - Name: K
     Image: {fileID: -1127063002332224934, guid: 523635428037d3e4bbd0e61aaa180ede,
       type: 3}
+    RotateImage: 0
   - Name: L
     Image: {fileID: -5901097786099144959, guid: 523635428037d3e4bbd0e61aaa180ede,
       type: 3}
+    RotateImage: 0
   - Name: M
     Image: {fileID: 3295844289267200183, guid: 523635428037d3e4bbd0e61aaa180ede, type: 3}
+    RotateImage: 0
   - Name: N
     Image: {fileID: 7112752472869403061, guid: 3405d704f71888b4ea3b6a9dbb8e030f, type: 3}
+    RotateImage: 0
   - Name: O
     Image: {fileID: 5433449995169814141, guid: 3405d704f71888b4ea3b6a9dbb8e030f, type: 3}
+    RotateImage: 0
   - Name: P
     Image: {fileID: -4252152113809563852, guid: 3405d704f71888b4ea3b6a9dbb8e030f,
       type: 3}
+    RotateImage: 0
   - Name: Q
     Image: {fileID: -4447791616812998045, guid: 3405d704f71888b4ea3b6a9dbb8e030f,
       type: 3}
+    RotateImage: 0
   - Name: R
     Image: {fileID: -6342808464625005154, guid: 3405d704f71888b4ea3b6a9dbb8e030f,
       type: 3}
+    RotateImage: 0
   - Name: S
     Image: {fileID: 8083504644574312765, guid: 3405d704f71888b4ea3b6a9dbb8e030f, type: 3}
+    RotateImage: 0
   - Name: T
     Image: {fileID: -4461999128152558772, guid: 3405d704f71888b4ea3b6a9dbb8e030f,
       type: 3}
+    RotateImage: 0
   - Name: U
     Image: {fileID: 3270655726746431581, guid: 3405d704f71888b4ea3b6a9dbb8e030f, type: 3}
+    RotateImage: 0
   - Name: V
     Image: {fileID: -2983290644488427326, guid: 3405d704f71888b4ea3b6a9dbb8e030f,
       type: 3}
+    RotateImage: 0
   - Name: W
     Image: {fileID: -9165466868132007793, guid: 3405d704f71888b4ea3b6a9dbb8e030f,
       type: 3}
+    RotateImage: 0
   - Name: X
     Image: {fileID: 4461586319009975920, guid: 3405d704f71888b4ea3b6a9dbb8e030f, type: 3}
+    RotateImage: 0
   - Name: Y
     Image: {fileID: -5001085640463096552, guid: 9538a40aab032e741a56dfb5ddb02a9a,
       type: 3}
+    RotateImage: 0
   - Name: Z
     Image: {fileID: 3539555106843919260, guid: 9538a40aab032e741a56dfb5ddb02a9a, type: 3}
+    RotateImage: 0

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace OctanGames
 {
 	[CustomEditor(typeof(ItemSet))]
-	public class DictionaryEditor : Editor
+	public class ItemSetEditor : Editor
 	{
 		private ItemSet dictionary;
 
@@ -30,8 +30,10 @@ namespace OctanGames
 						break;
 					}
 
+					EditorGUILayout.BeginHorizontal();
 					item.Name = EditorGUILayout.TextField("Name", item.Name);
-					item.Rotate = EditorGUILayout.Toggle("Rotate", item.Rotate);
+					item.RotateImage = EditorGUILayout.Toggle("Rotate Image", item.RotateImage);
+					EditorGUILayout.EndHorizontal();
 					item.Image = EditorGUILayout.ObjectField("Image", item.Image, typeof(Sprite), false) as Sprite;
 
 					EditorGUILayout.EndVertical();

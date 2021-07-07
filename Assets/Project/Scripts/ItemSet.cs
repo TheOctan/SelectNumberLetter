@@ -36,6 +36,6 @@ namespace OctanGames
 	{
 		public string Name;
 		public Sprite Image;
-		public bool Rotate;
+		public bool RotateImage;
 	}
 }
