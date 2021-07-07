@@ -2,18 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace OctanGames
+namespace OctanGames.Managers
 {
-	public class TaskGenerator : MonoBehaviour, ITaskGenerator
+	public class TaskGenerator : MonoBehaviour, ITaskGenerator, IItemProvider
 	{
+		public ItemSet ActiveSet => _itemLibrary.Sets.Count > 0 ? _itemLibrary.Sets[_activeSetIndex] : null;
+		public Item CurrentItem { get; private set; }
+
 		[Header("Task info")]
 		[SerializeField] private string _taskTemplate;
 		[SerializeField] private bool _randomizeWithRestart;
 
-		public List<ItemSet> Sets = new List<ItemSet>();
-		public ItemSet ActiveSet => Sets.Count > 0 ? Sets[_activeSetIndex] : null;
+		[SerializeField] private Library _itemLibrary;
 
 		private System.Random _random = new System.Random(System.DateTime.Now.Second);
+		private List<RandomIndexGenerator> _indexGenerators = new List<RandomIndexGenerator>();
 		private int _activeSetIndex = 0;
 
 		private void Awake()
@@ -31,20 +34,22 @@ namespace OctanGames
 
 		public string GetNextTask()
 		{
-			if (Sets.Count > 1)
+			if (_itemLibrary.Sets.Count > 1)
 			{
-				_activeSetIndex = _random.Next(0, Sets.Count);
+				_activeSetIndex = _random.Next(0, _itemLibrary.Sets.Count);
 			}
 
-			var item = Sets[_activeSetIndex].GetNextRandomItem();
-			return string.Format(_taskTemplate, item.Name);
+			int randomIndex = _indexGenerators[_activeSetIndex].GetNextRandomIndex();
+			CurrentItem = ActiveSet.Items[randomIndex];
+			return string.Format(_taskTemplate, CurrentItem.Name);
 		}
 
 		private void RandomizeSets()
 		{
-			for (int i = 0; i < Sets.Count; i++)
+			for (int i = 0; i < _itemLibrary.Sets.Count; i++)
 			{
-				Sets[i].RandomizeSet();
+				int itemsCount = _itemLibrary.Sets[i].Items.Count;
+				_indexGenerators.Add(new RandomIndexGenerator(itemsCount));
 			}
 		}
 	}

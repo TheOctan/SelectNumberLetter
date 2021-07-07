@@ -5,7 +5,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace OctanGames
+namespace OctanGames.Managers
 {
 	public class LevelManager : MonoBehaviour
 	{
@@ -69,8 +69,8 @@ namespace OctanGames
 				_gameFinished.Invoke();
 			}
 
-			_levelStarted.Invoke(_currentLevel);
 			UpdateTask();
+			_levelStarted.Invoke(_currentLevel);
 		}
 		
 		private void UpdateTask()

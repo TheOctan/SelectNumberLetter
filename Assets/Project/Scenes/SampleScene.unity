@@ -374,10 +374,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 600573de42f525340ab12dadb9e1003c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _columnsPerLevel: 3
   _itemPrefab: {fileID: 5588587102971479232, guid: 633fb7140c85c9c4b9957e78d519d426,
     type: 3}
-  _grid: {fileID: 449531236}
-  _columnsPerLevel: 3
+  _provider: {fileID: 812755111}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1039,9 +1039,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _taskTemplate: Find {0}
   _randomizeWithRestart: 0
-  Sets:
-  - {fileID: 11400000, guid: b04676f01215c3840bd1f53223225ddd, type: 2}
-  - {fileID: 11400000, guid: 7dc33707a6b94af418aacb28b7871de8, type: 2}
+  _itemLibrary: {fileID: 11400000, guid: 931937d0335835f4c8a64c4f5270cf95, type: 2}
 --- !u!1001 &861603498
 PrefabInstance:
   m_ObjectHideFlags: 0

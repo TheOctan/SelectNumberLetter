@@ -1,3 +1,4 @@
+using OctanGames.Managers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,12 +9,27 @@ namespace OctanGames
 	[RequireComponent(typeof(GridLayoutGroup))]
 	public class Panel : MonoBehaviour
 	{
-		[SerializeField] private ItemView _itemPrefab;
-
 		[SerializeField, Min(1)] private int _columnsPerLevel = 3;
+		[SerializeField] private ItemView _itemPrefab;
+		[SerializeField] private MonoBehaviour _provider;
 
-		private List<ItemView> _items = new List<ItemView>();
+		private IItemProvider _itemProvider;
 		private GridLayoutGroup _grid;
+		private List<string> _items = new List<string>();
+		private RandomIndexGenerator _indexGenerator = new RandomIndexGenerator();
+
+		private void OnValidate()
+		{
+			if (_provider is IItemProvider itemProvider)
+			{
+				_itemProvider = itemProvider;
+			}
+			else if(_provider != null)
+			{
+				Debug.LogError(_provider.name + " needs to implement " + nameof(IItemProvider));
+				_provider = null;
+			}
+		}
 
 		private void Awake()
 		{
@@ -35,20 +51,28 @@ namespace OctanGames
 		{
 			ResetPanel();
 
-			int countItems = countRows * _columnsPerLevel;
+			List<Item> items = _itemProvider.ActiveSet.Items;
+			_indexGenerator.Randomize(items.Count);
 
+			int countItems = countRows * _columnsPerLevel;
 			for (int i = 0; i < countItems; i++)
 			{
-				ItemView item = Instantiate(_itemPrefab, transform);
-				item.BackgroundColor = Random.ColorHSV(0, 1, 0.22f, 0.55f, 1, 1);
+				int randomIndex = _indexGenerator.GetNextRandomIndex();
+				Item item = items[randomIndex];
 
-				_items.Add(item);
+				ItemView itemView = Instantiate(_itemPrefab, transform);
+				itemView.BackgroundColor = Random.ColorHSV(0, 1, 0.22f, 0.55f, 1, 1);
+				itemView.iconImage = item.Image;
+
+				if (item.RotateImage)
+				{
+					itemView.RotateIcon(-90);
+				}
 			}
 		}
 
 		private void ResetPanel()
 		{
-			_items.Clear();
 			for (int i = 0; i < transform.childCount; i++)
 			{
 				Destroy(transform.GetChild(i).gameObject);

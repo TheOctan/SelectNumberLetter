@@ -9,32 +9,6 @@ namespace OctanGames
 	public class ItemSet : ScriptableObject
 	{
 		public List<Item> Items = new List<Item>();
-
-		private Queue<int> _randomIndices;
-
-		public Item GetNextRandomItem()
-		{
-			if (_randomIndices == null)
-			{
-				Debug.LogWarning("You must randomize the set");
-				return null;
-			}
-
-			int randoIndex = _randomIndices.Dequeue();
-			_randomIndices.Enqueue(randoIndex);
-			return Items[randoIndex];
-		}
-
-		public void RandomizeSet()
-		{
-			List<int> indices = new List<int>(Items.Count);
-			for (int i = 0; i < Items.Count; i++)
-			{
-				indices.Add(i);
-			}
-
-			_randomIndices = new Queue<int>(indices.Shuffle());
-		}
 	}
 
 	[System.Serializable]

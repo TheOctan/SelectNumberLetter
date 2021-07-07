@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace OctanGames.Managers
 {
-	public interface ITaskGenerator
+	public interface IItemProvider
 	{
-		string GetNextTask();
+		ItemSet ActiveSet { get; }
+		Item CurrentItem { get; }
 	}
 }

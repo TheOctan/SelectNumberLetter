@@ -18,6 +18,11 @@ namespace OctanGames
 			set => _icon.sprite = value;
 		}
 
+		public void RotateIcon(float angle)
+		{
+			_icon.rectTransform.Rotate(Vector3.forward, angle);
+		}
+
 		[SerializeField] private Image _background;
 		[SerializeField] private Image _icon;
 	}
