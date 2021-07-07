@@ -54,9 +54,9 @@ namespace OctanGames.Managers
 
 		private void StartGame()
 		{
-			_levelStarted.Invoke(_currentLevel);
 			UpdateTask();
 			AnimateMenu();
+			_levelStarted.Invoke(_currentLevel);
 		}
 
 		public void NextLevel()

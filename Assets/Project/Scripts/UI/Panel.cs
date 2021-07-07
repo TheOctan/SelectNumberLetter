@@ -17,6 +17,7 @@ namespace OctanGames
 		private GridLayoutGroup _grid;
 		private List<string> _items = new List<string>();
 		private RandomIndexGenerator _indexGenerator = new RandomIndexGenerator();
+		private System.Random _random = new System.Random(System.DateTime.Now.Second);
 
 		private void OnValidate()
 		{
@@ -24,7 +25,7 @@ namespace OctanGames
 			{
 				_itemProvider = itemProvider;
 			}
-			else if(_provider != null)
+			else if (_provider != null)
 			{
 				Debug.LogError(_provider.name + " needs to implement " + nameof(IItemProvider));
 				_provider = null;
@@ -54,21 +55,44 @@ namespace OctanGames
 			List<Item> items = _itemProvider.ActiveSet.Items;
 			_indexGenerator.Randomize(items.Count);
 
+
 			int countItems = countRows * _columnsPerLevel;
+			int activePosition = _random.Next(0, countItems);
+
 			for (int i = 0; i < countItems; i++)
 			{
-				int randomIndex = _indexGenerator.GetNextRandomIndex();
-				Item item = items[randomIndex];
-
-				ItemView itemView = Instantiate(_itemPrefab, transform);
-				itemView.BackgroundColor = Random.ColorHSV(0, 1, 0.22f, 0.55f, 1, 1);
-				itemView.iconImage = item.Image;
-
-				if (item.RotateImage)
+				if (i == activePosition)
 				{
-					itemView.RotateIcon(-90);
+					InitItemView(_itemProvider.CurrentItem);
+				}
+				else
+				{
+					int randomIndex;
+					Item item;
+					do
+					{
+						randomIndex = _indexGenerator.GetNextRandomIndex();
+						item = items[randomIndex];
+
+					} while (item.Name.Equals(_itemProvider.CurrentItem.Name));
+
+					InitItemView(item);
 				}
 			}
+		}
+
+		private ItemView InitItemView(Item item)
+		{
+			ItemView itemView = Instantiate(_itemPrefab, transform);
+			itemView.BackgroundColor = Random.ColorHSV(0, 1, 0.22f, 0.55f, 1, 1);
+			itemView.iconImage = item.Image;
+
+			if (item.RotateImage)
+			{
+				itemView.RotateIcon(-90);
+			}
+
+			return itemView;
 		}
 
 		private void ResetPanel()
@@ -78,6 +102,6 @@ namespace OctanGames
 				Destroy(transform.GetChild(i).gameObject);
 			}
 		}
-		
+
 	}
 }
