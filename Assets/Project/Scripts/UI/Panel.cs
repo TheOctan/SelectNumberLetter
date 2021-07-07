@@ -2,6 +2,7 @@ using OctanGames.Managers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace OctanGames
@@ -12,6 +13,9 @@ namespace OctanGames
 		[SerializeField, Min(1)] private int _columnsPerLevel = 3;
 		[SerializeField] private ItemView _itemPrefab;
 		[SerializeField] private MonoBehaviour _provider;
+
+		[Header("Events")]
+		[SerializeField] private SelectionEvent _answerSelected;
 
 		private IItemProvider _itemProvider;
 		private GridLayoutGroup _grid;
@@ -42,6 +46,12 @@ namespace OctanGames
 			GenerateGrid(level);
 		}
 
+		private void OnSelectAnswer(int index)
+		{
+			string answer = _items[index];
+			_answerSelected.Invoke(answer);
+		}
+
 		private void UpdateGrid()
 		{
 			_grid = GetComponent<GridLayoutGroup>();
@@ -63,29 +73,42 @@ namespace OctanGames
 			{
 				if (i == activePosition)
 				{
-					InitItemView(_itemProvider.CurrentItem);
+					InitItemView(_itemProvider.CurrentItem, i);
 				}
 				else
 				{
-					int randomIndex;
 					Item item;
 					do
 					{
-						randomIndex = _indexGenerator.GetNextRandomIndex();
+						int randomIndex = _indexGenerator.GetNextRandomIndex();
 						item = items[randomIndex];
 
 					} while (item.Name.Equals(_itemProvider.CurrentItem.Name));
 
-					InitItemView(item);
+					InitItemView(item, i);
 				}
 			}
 		}
 
-		private ItemView InitItemView(Item item)
+		private void ResetPanel()
+		{
+			_items.Clear();
+			for (int i = 0; i < transform.childCount; i++)
+			{
+				var item = transform.GetChild(i).gameObject;
+				item.GetComponent<Button>().onClick.RemoveAllListeners();
+				Destroy(item);
+			}
+		}
+
+		private ItemView InitItemView(Item item, int index)
 		{
 			ItemView itemView = Instantiate(_itemPrefab, transform);
 			itemView.BackgroundColor = Random.ColorHSV(0, 1, 0.22f, 0.55f, 1, 1);
 			itemView.iconImage = item.Image;
+			itemView.GetComponent<Button>().onClick.AddListener(() => OnSelectAnswer(index));
+
+			_items.Add(item.Name);
 
 			if (item.RotateImage)
 			{
@@ -94,14 +117,10 @@ namespace OctanGames
 
 			return itemView;
 		}
+	}
 
-		private void ResetPanel()
-		{
-			for (int i = 0; i < transform.childCount; i++)
-			{
-				Destroy(transform.GetChild(i).gameObject);
-			}
-		}
-
+	[System.Serializable]
+	public class SelectionEvent : UnityEvent<string>
+	{
 	}
 }

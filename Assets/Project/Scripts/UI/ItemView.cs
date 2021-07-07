@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 namespace OctanGames
 {
+	[RequireComponent(typeof(Button))]
 	public class ItemView : MonoBehaviour
 	{
 		public Color BackgroundColor
