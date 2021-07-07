@@ -4,6 +4,8 @@ using TMPro;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
+using OctanGames.Extensions;
 
 namespace OctanGames.Managers
 {
@@ -12,16 +14,28 @@ namespace OctanGames.Managers
 		[Header("Settings")]
 		[Range(1, 3)]
 		[SerializeField] int _countLevels = 3;
-		[SerializeField] private float _startDelay = 0.1f;
+		[SerializeField, Min(0.01f)] private float _startDelay = 0.1f;
+		[SerializeField, Min(0.01f)] private float _loadDelay = 0.1f;
+
+		[Header("UI")]
+		[SerializeField] private Image _fadeScreen;
+		[SerializeField] private float _fadeScreenDuration = 0.3f;
+		[Space(10)]
+		[SerializeField] private Image _loadScreen;
+		[SerializeField] private float _loadScreenDuration = 0.3f;
+		[Space(10)]
+		[SerializeField] private Transform _restartButton;
+		[SerializeField, Min(0.01f)] private float _buttonInDuration = 0.3f;
+		[SerializeField] private Ease _buttonEaseType = Ease.Linear;
 
 		[Header("Panel settings")]
-		[SerializeField] private Panel _panel;
-		[SerializeField, Min(0.01f)] private float _inDuration = 1f;
+		[SerializeField] private Transform _panel;
+		[SerializeField, Min(0.01f)] private float _panelInDuration = 0.3f;
 		[SerializeField] private Ease _panelEaseType = Ease.Linear;
 
 		[Header("Task settings")]
 		[SerializeField] private TextMeshProUGUI _taskLabel;
-		[SerializeField, Min(0.01f)] private float _fadeDuration = 1f;
+		[SerializeField, Min(0.01f)] private float _fadeLabelDuration = 0.5f;
 		[SerializeField] private Ease _taskEaseType = Ease.Linear;
 
 		[Header("Events")]
@@ -30,13 +44,11 @@ namespace OctanGames.Managers
 
 		private ITaskGenerator _taskGenerator;
 
-		private Color _taskLabelColor;
 		private int _currentLevel = 1;
 
 		private void Awake()
 		{
 			_taskGenerator = GetComponent<ITaskGenerator>();
-			InitMenu();
 		}
 
 		private void Start()
@@ -52,6 +64,25 @@ namespace OctanGames.Managers
 			}
 		}
 
+		public void NextLevel()
+		{
+			_currentLevel++;
+			if (_currentLevel > _countLevels)
+			{
+				RestartLevels();
+				StopGame();
+				return;
+			}
+
+			UpdateTask();
+			_levelStarted.Invoke(_currentLevel);
+		}
+
+		public void RestartGame()
+		{
+			FadeInOutLoadScreen();
+		}
+
 		private void StartGame()
 		{
 			UpdateTask();
@@ -59,38 +90,69 @@ namespace OctanGames.Managers
 			_levelStarted.Invoke(_currentLevel);
 		}
 
-		public void NextLevel()
+		private void StopGame()
 		{
-			_currentLevel++;
-			if (_currentLevel > _countLevels)
-			{
-				_currentLevel = 1;
-
-				_gameFinished.Invoke();
-			}
-
-			UpdateTask();
-			_levelStarted.Invoke(_currentLevel);
+			FadeInScreen();
+			_gameFinished.Invoke();
 		}
-		
+
+		private void RestartLevels()
+		{
+			_currentLevel = 0;
+		}
+
 		private void UpdateTask()
 		{
 			_taskLabel.text = _taskGenerator.GetNextTask();
 		}
 
-		private void InitMenu()
-		{
-			_taskLabelColor = _taskLabel.color;
-			_taskLabel.color = new Color(0, 0, 0, 0);
-			_panel.transform.localScale = new Vector3(0, 0, 0);
-		}
-
 		private void AnimateMenu()
 		{
+			Color taskLabelColor = _taskLabel.color;
+			_taskLabel.color = new Color(0, 0, 0, 0);
+			_panel.localScale = Vector3.zero;
+
 			DOTween.Sequence()
 				.AppendInterval(_startDelay)
-				.Append(_panel.transform.DOScale(1, _inDuration).SetEase(_panelEaseType))
-				.Append(_taskLabel.DOColor(_taskLabelColor, _fadeDuration).SetEase(_taskEaseType));
+				.Append(_panel.transform.DOScale(1, _panelInDuration).SetEase(_panelEaseType))
+				.Append(_taskLabel.DOColor(taskLabelColor, _fadeLabelDuration).SetEase(_taskEaseType));
+		}
+
+		private void FadeInScreen()
+		{
+			_fadeScreen.gameObject.SetActive(true);
+			Color fadeScreenColor = _fadeScreen.color;
+			_fadeScreen.color = Color.black.SetAlpha(0);
+			_restartButton.localScale = Vector3.zero;
+
+			DOTween.Sequence()
+				.Append(_fadeScreen.DOFade(fadeScreenColor.a, _fadeScreenDuration))
+				.Append(_restartButton.DOScale(1, _buttonInDuration).SetEase(_buttonEaseType));
+		}
+
+		private void DisableFadeScreen()
+		{
+			_fadeScreen.gameObject.SetActive(false);
+		}
+
+		private void FadeInOutLoadScreen()
+		{
+			_loadScreen.gameObject.SetActive(true);
+			_loadScreen.color = Color.white.SetAlpha(0);
+
+			DOTween.Sequence()
+				.Append(_loadScreen.DOFade(1, _loadScreenDuration))
+				.AppendCallback(() =>
+				{
+					DisableFadeScreen();
+					NextLevel();
+				})
+				.AppendInterval(_loadDelay)
+				.Append(_loadScreen.DOFade(0, _loadScreenDuration))
+				.OnComplete(() =>
+				{
+					_loadScreen.gameObject.SetActive(false);
+				});
 		}
 	}
 
